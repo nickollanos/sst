@@ -22,7 +22,11 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        $this->call([
+            FechasSeeder::class,
+        ]);
+
         Datos::factory(20)->create();
-        Fechas::factory(20)->create();
+        // Fechas::factory(20)->create();
     }
 }
