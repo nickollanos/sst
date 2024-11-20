@@ -1,0 +1,25 @@
+@keyframes progress{
+    0%{ --percentage: 0; }
+    100%{ --percentage: var( --value ); }
+}
+
+@property --percentage {
+    sintax: '<number>';
+    inherits: true;
+    initial-value: 0;
+}
+
+[role="progressbar"] {
+    --percentage: var( --value );
+    --primary: #369;
+    --secundary: #adf;
+    --size: 300px;
+    animation: progress 2s 0.5s forwards;
+    width: var(--size);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
