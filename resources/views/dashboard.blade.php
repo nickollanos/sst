@@ -61,46 +61,51 @@
     <!-- Main Content -->
     <main class="p-6 space-y-8">
     @foreach($datos as $dato)
+        @php
+            $porcentajeAdministrativos = ($dato->trabajadores > 0) ? number_format(($dato->administrativos / $dato->trabajadores) * 100, 2) : "0.00";
+            $porcentajeOperativos = ($dato->trabajadores > 0) ? number_format(($dato->operativos / $dato->trabajadores) * 100, 2) : "0.00";
+            $gradosAdministrativos = number_format(($porcentajeAdministrativos / 100 ) * 360, 2);
+            $gradosOperativos = number_format(($porcentajeOperativos / 100 ) * 360, 2);
+            $dona = [
+                ['label' => 'Categoria 1', 'value' => $porcentajeAdministrativos],
+                ['label' => 'Categoria 2', 'value' => $porcentajeOperativos]
+            ];
+        @endphp
         <!-- Primer Nivel: 3 Tarjetas -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-white p-4 rounded-lg shadow-md h-full">
+                 <!-- Título centrado para las mini tarjetas -->
+                <div class="text-center">
+                    <strong>COLABORADORES</strong>
+                </div>
                 <!-- Contenedor para las mini tarjetas -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
 
                     <!-- Mini tarjeta con gráfica de dona -->
                     <div class="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center justify-center">
                         <!-- Gráfico de dona con SVG -->
-                        <svg class="w-28 h-28 transform rotate-90" viewBox="0 0 36 36">
-                            <!-- Fondo del círculo (gris claro) -->
-                            <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#e0e0e0" stroke-width="4"/>
+                       {{ SVGGraph::doughnut($dona) }}
 
-                            <!-- Porcentaje Azul (60% - 216 grados) -->
-                            <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#1E40AF" stroke-width="4"
-                                stroke-dasharray="216 144" stroke-linecap="round"/>
-
-                            <!-- Porcentaje Naranja (40% - 144 grados) -->
-                            <circle cx="18" cy="18" r="15.915" fill="transparent" stroke="#F59E0B" stroke-width="4"
-                                    stroke-dasharray="144 216" stroke-dashoffset="216" stroke-linecap="round" pathLength="360"/>
-                        </svg>
-
-                        <h1 class="text-center mt-2">trabajadores</h1>
-                        <span class="text-lg font-bold">21</span>
+                        <h1 class="text-center mt-2">TRABAJADORES</h1>
+                        <span class="text-lg font-bold">{{ $dato->trabajadores }}</span>
                     </div>
-
-
 
                     <!-- Mini tarjeta con imágenes apiladas -->
                     <div class="bg-gray-100 p-4 rounded-lg shadow-md space-y-4">
                         <!-- Primera imagen -->
                         <div class="flex flex-col items-center">
-                            <img src="https://via.placeholder.com/100" alt="Imagen 1" class="w-24 h-24 rounded-full">
-                            <h1 class="text-center mt-2">Imagen 1</h1>
+                            <img src="{{ asset('images/icon-admin.svg') }}" alt="administrativos" class="w-24 h-24 rounded-full">
+                            <h1 class="text-center mt-2">ADMINISTRATIVOS</h1>
+                            <h1 class="text-center mt-2">{{ $porcentajeAdministrativos }}%</h1>
+                            <h1 class="text-center mt-2">{{ $gradosAdministrativos }}</h1>
                         </div>
 
                         <!-- Segunda imagen -->
                         <div class="flex flex-col items-center">
-                            <img src="https://via.placeholder.com/100" alt="Imagen 2" class="w-24 h-24 rounded-full">
-                            <h1 class="text-center mt-2">Imagen 2</h1>
+                            <img src="{{ asset('images/icon-worker.svg') }}" alt="operativos" class="w-24 h-24 rounded-full">
+                            <h1 class="text-center mt-2">OPERATIVOS</h1>
+                            <h1 class="text-center mt-2">{{ $porcentajeOperativos }}%</h1>
+                            <h1 class="text-center mt-2">{{ $gradosOperativos }}</h1>
                         </div>
                     </div>
                 </div>
