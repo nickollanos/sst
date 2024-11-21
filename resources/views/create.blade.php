@@ -7,67 +7,62 @@
 
     <!-- Estilos CSS dentro de la etiqueta <style> -->
     <style>
-       body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f5f5f5;
+    .gauge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 0 100% 100% 0;
+  background-color: #f0f0f0;
+  overflow: hidden;
 }
 
-.gauge {
-    position: relative;
-    width: 80%; /* Adjust width for responsiveness */
-    height: auto; /* Allow height to adjust */
-    max-width: 300px; /* Set a maximum width */
-    overflow: hidden;
+.gauge-value {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  border-radius: 0 100% 100% 0;
+  background-color: #4CAF50;
+  transform: scaleX(0.5);
+  transform-origin: left;
+  transition: transform 0.5s ease-in-out;
 }
 
-.gauge:before {
-    content: '';
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: conic-gradient(
-        #4caf50 0% 70%,
-        #ddd 70% 100%
-    );
-    transform: translateY(-50%) rotate(180deg);
-    top: 100%;
-    left: 50%;
-    transform-origin: bottom;
-}
-
-.gauge .indicator {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 10px;
-    height: 90px;
-    background-color: #333;
-    transform-origin: bottom;
-    transform: rotate(180deg);
-}
-
-.gauge .label {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    top: 40%;
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
+.gauge-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: bold;
 }
     </style>
 </head>
 <body>
 
     <!-- Barra de progreso -->
-    <div class="gauge">
-        <div class="indicator" style="transform: rotate(126deg);"></div>
-        <div class="label">70%</div>
+    <div class="gauge-container">
+        <div class="gauge">
+            <div class="gauge-value"></div>
+        </div>
+        <div class="gauge-text">50%</div>
     </div>
 
+    <script>
+        const gaugeValue = document.getElementById('gauge-value');
+const gaugeText = document.getElementById('gauge-text');
+
+// Actualiza el valor del gauge
+function updateGauge(value) {
+  gaugeValue.style.transform = `scaleX(${value / 100})`;
+  gaugeText.textContent = `${value}%`;
+}
+
+// Ejemplo de uso
+// updateGauge(75);
+    </script>
 </body>
 </html>
