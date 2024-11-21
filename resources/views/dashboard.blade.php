@@ -15,7 +15,7 @@
     <nav class="bg-blue-600 p-4 flex items-center justify-between text-white">
         <div class="flex space-x-4">
             <!-- Select Año -->
-            <select class="bg-blue-500 text-white p-2 rounded-md" name="ano">
+            <select class="bg-blue-500 text-white p-2 rounded-md" name="ano" id="ano">
                 <option value="">Año</option>
                 @foreach($datos->unique('ano') as $dato)
                 <option value="{{ $dato->ano }}" @if(old('ano')==$dato->ano ) selected @endif>{{ $dato->ano }}</option>
@@ -23,7 +23,7 @@
             </select>
 
             <!-- Select Mes -->
-            <select class="bg-blue-500 text-white p-2 rounded-md" name="mes">
+            <select class="bg-blue-500 text-white p-2 rounded-md" name="mes" id="mes">
                 <option value="">Mes</option>
                 <option value="enero">Enero</option>
                 <option value="febrero">Febrero</option>
@@ -62,7 +62,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="p-6 space-y-8">
+    <main class="p-6 space-y-8" id="dashboard">
         @foreach($datos as $dato)
         @php
         $porcentajeAdministrativos = ($dato->trabajadores > 0) ? number_format(($dato->administrativos / $dato->trabajadores) * 100, 0) : "0";
@@ -79,6 +79,7 @@
         $porcentajeSimulacro = number_format(($dato->simulacros_ejecutados / $dato->simulacros_programados) * 100, 0);
         $porcentajeInspeccion = number_format(($dato->inspecciones_ejecutadas / $dato->inspecciones_programadas) * 100, 0);
         $porcentajeSST = number_format(($dato->PASST_ejecutados / $dato->PASST_programados) * 100, 0);
+        $gradosSST = number_format(($porcentajeSST / 100 ) * 180, 0);
         @endphp
         <!-- Primer Nivel: 3 Tarjetas -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -312,84 +313,140 @@
                 </div>
             </div>
 
-            <!-- Tarjeta 2 -->
+            <!-- Tarjeta programa anual-->
             <div class="bg-white p-4 rounded-lg shadow-md h-full">
-                <h2 class="text-xl font-semibold">Tarjeta 5</h2>
-                <p>Contenido de la tarjeta 5.</p>
-                <div role="progressbar" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" style="--value:67">
 
+                <div class="text-center">
+                    <strong>PROGRAMA ANUAL SST</strong>
                 </div>
-            </div>
 
-            <!-- Tarjeta 3 -->
-            <div class="grid grid-cols-2 gap-6">
-
-                <!-- Tarjeta covid -->
-                <div class="bg-white p-4 rounded-lg shadow-md h-full">
-                    <div class="text-center">
-                        <strong>REPORTES COVID</strong>
-                    </div>
-
-                    <!-- Contenedor para imagen y texto -->
-                    <div class="bg-gray-200 p-4 rounded-lg shadow-md">
-                        <div class="flex flex-col items-center">
-                            <!-- Imagen centrada -->
-                            <img src="{{ asset('images/lung.svg') }}" alt="lung" class="w-32 h-48 object-cover rounded-md mb-4 mt-20">
-
-                            <!-- Texto debajo de la imagen -->
-                            <div class="flex flex-col items-center space-y-2">
-                                <div class="text-center">
-                                    <strong>CASOS POSITIVOS</strong>
+                <!-- Contenedor para imagen y texto -->
+                <div class="bg-gray-200 p-4 rounded-lg shadow-md">
+                    <div class="flex flex-col items-center mt-28">
+                        <!-- Gráfica de media luna -->
+                        <div class="wrapper">
+                            <div class="gauge">
+                                <div class="slice-colors">
+                                    <div class="st slice-item"></div>
+                                    <div class="st slice-item"></div>
+                                    <div class="st slice-item"></div>
+                                    <div class="st slice-item"></div>
+                                    <div class="st slice-item"></div>
                                 </div>
-                                <strong class="text-xl text-gray-900">14</strong>
+                                <!-- <div class="needle" style="transform: rotate(180deg);"></div> -->
+                                <div class="needle" style="transform: rotate({{ $gradosSST }}deg);"></div>
+                                <div class="gauge-center"></div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Tarjeta programa anual-->
-                <div class="bg-white p-4 rounded-lg shadow-md h-full">
-                    <div class="text-center">
-                        <strong>REPORTES COVID</strong>
-                    </div>
-
-                    <!-- Contenedor para imagen y texto -->
-                    <div class="bg-gray-200 p-4 rounded-lg shadow-md">
-                        <div class="flex flex-col items-center">
-                            <!-- Gráfica de media luna -->
-                            <!-- <div role="progressbar" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" style="--value:67">
-
-                            </div> -->
-
-                            <!-- Texto debajo de la imagen -->
-                            <div class="flex flex-col items-center space-y-2">
-                                <div class="text-center">
-                                    <strong>CASOS POSITIVOS</strong>
-                                </div>
-                                <strong class="text-xl text-gray-900">{{ $porcentajeSST }}%</strong>
+                        <!-- Texto debajo de la imagen -->
+                        <div class="flex flex-col items-center space-y-2 mt-20">
+                            <strong class="text-xl text-gray-900">{{ $porcentajeSST }}%</strong>
+                            <div class="text-center">
+                                <strong>AVANCE ANUAL DEL PROGRAMA SST</strong>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-        </div>
+            <!-- Tarjeta covid -->
+            <div class="bg-white p-4 rounded-lg shadow-md h-full">
+
+                <div class="text-center">
+                    <strong>REPORTES COVID</strong>
+                </div>
+
+                <!-- Contenedor para imagen y texto -->
+                <div class="bg-gray-200 p-4 rounded-lg shadow-md">
+                    <div class="flex flex-col items-center">
+                        <!-- Imagen centrada -->
+                        <img src="{{ asset('images/lung.svg') }}" alt="lung" class="w-32 h-48 object-cover rounded-md mb-4 mt-20">
+
+                        <!-- Texto debajo de la imagen -->
+                        <div class="flex flex-col items-center space-y-2 mt-20">
+                            <strong class="text-xl text-gray-900">{{ $dato->covid_positivos }}</strong>
+                            <div class="text-center">
+                                <strong>CASOS POSITIVOS</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <!-- Tercer Nivel: Tarjeta centrada -->
-        <div class="flex justify-center">
-            <div class="bg-white p-4 rounded-lg shadow-md w-full max-w-3xl h-full">
-                <h2 class="text-xl font-semibold text-center">Tarjeta 7 - Centrada</h2>
-                <p class="text-center">Contenido de la tarjeta centrada.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow-md h-full">
+                <div class="text-center">
+                    <strong>ACTOS Y CONDICIONES INSEGURAS</strong>
+                </div>
+                <!-- Tercer Nivel: Tarjeta centrada -->
+                <div class="flex justify-center space-x-4">
+
+                    <!-- Tarjeta 2: Imagen a la derecha, texto (strong) a la izquierda -->
+                    <div class="bg-gray-200 p-4 rounded-lg shadow-md w-full max-w-xs flex items-center justify-end">
+                        <div class="text-center">
+                            <strong class="text-sm mr-4">ACTOS INSEGUROS</strong>
+                        </div>
+                        <div class="relative w-full h-full mr-2">
+                            <img src="{{ asset('images/cone.svg') }}" alt="cone" class="w-full h-full">
+                            <!-- Número en la mitad de la imagen -->
+                            <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-md">
+                                {{ $dato->actos_inseguros }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Tarjeta 1: Imagen a la izquierda, texto (strong) a la derecha -->
+                    <div class="bg-gray-200 p-4 rounded-lg shadow-md w-full max-w-xs flex items-center">
+                        <div class="relative w-full h-full mr-2">
+                            <img src="{{ asset('images/cone.svg') }}" alt="cone" class="w-full h-full">
+                            <!-- Número en la mitad de la imagen -->
+                            <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-md">
+                            {{ $dato->condiciones_inseguras }}
+                            </span>
+                        </div>
+                        <div class="text-center">
+                            <strong class="text-sm">CONDICIONES INSEGURAS</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
             </div>
         </div>
-        @endforeach
+
     </main>
 
+    @endforeach
     <!-- Footer -->
     <footer class="bg-blue-600 p-4 text-white text-center">
         <p>&copy; 2024 Reporte de Seguridad y Salud en el Trabajo. Todos los derechos reservados.</p>
     </footer>
+
+    @section('js')
+    <script>
+        $(document).ready(function() {
+            $('#ano, #mes').on('change',
+                function() {
+                    var ano = $('#ano').val();
+                    var mes = $('#mes').val();
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/filtrar-datos',
+                        data: { ano: ano, mes: mes },
+                        success: function(data) {
+                            $('#dasboard').html(data);
+                        }
+                    });
+            });
+        });
+    </script>
+    @endsection
 
 </body>
 
