@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('fechas', function (Blueprint $table) {
             $table->id();
             $table->date('ultimo_accidente');
-            $table->string('dias_sin_accidentes');
             $table->timestamps();
         });
     }

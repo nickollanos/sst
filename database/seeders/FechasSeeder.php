@@ -15,12 +15,8 @@ class FechasSeeder extends Seeder
     public function run(): void
     {
         $fecha       = Carbon::parse('2024-10-07');
-        $fechaActual = Carbon::now();
-        $dias        = (int) $fecha->diffInDays($fechaActual);
-
         $fechas = [
-            ['ultimo_accidente'      => $fecha,
-             'dias_sin_accidentes'   => $dias]
+            ['ultimo_accidente'      => $fecha]
          ];
 
          foreach ($fechas as $fecha){
