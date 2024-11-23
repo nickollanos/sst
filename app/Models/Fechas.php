@@ -14,7 +14,6 @@ class Fechas extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'ultimo_accidente',
-        'dias_sin_accidentes'
+        'ultimo_accidente'
     ];
 }

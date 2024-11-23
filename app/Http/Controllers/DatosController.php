@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Datos;
+use App\Models\Fechas;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class DatosController extends Controller
@@ -11,10 +14,38 @@ class DatosController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $datos = Datos::all();
-        return view('dashboard')->with('datos', $datos);
+        $ano = $request->query('ano');
+        $mes = $request->query('mes');
+
+        $datos = Datos::where('ano', $ano)->where('mes', $mes)->get();
+
+        if($datos->count() > 0){
+            $fechas = Fechas::all();
+            foreach ($fechas as $fecha){
+            $fecha       = Carbon::parse($fecha->ultimo_accidente);
+            $fechaActual = Carbon::now();
+            $dias        = (int) $fecha->diffInDays($fechaActual);
+            }
+
+            $anos   = Datos::distinct()->pluck('ano');
+
+            return view('show')->with('datos', $datos)
+                               ->with('dias', $dias)
+                               ->with('anos', $anos);
+        }else {
+            $datos  = Datos::all();
+            $fechas = Fechas::all();
+            foreach ($fechas as $fecha){
+            $fecha   = Carbon::parse($fecha->ultimo_accidente);
+            $fechaActual = Carbon::now();
+            $dias        = (int) $fecha->diffInDays($fechaActual);
+            }
+            session()->flash('message', 'Este año y este mes no tienen ningun datos almacenado');
+            return view('dashboard')->with('datos', $datos)
+                                    ->with('dias', $dias);
+        }
     }
 
     /**
@@ -69,6 +100,27 @@ class DatosController extends Controller
     public function update(Request $request, Datos $datos)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updateFecha(Request $request)
+    {
+        $fecha = $request->input('fecha');
+
+        $validatedData = Validator::make($request->all(), ['fecha' => 'required|date',]);
+
+        if($validatedData->fails()){
+            // session()->flash('message', 'Este año y este mes no tienen ningun datos almacenado');
+            return redirect(route('datos.index'))->withErrors($validatedData)->withInput();
+        }
+
+        $fechaModel = Fechas::find(1);
+        $fechaModel->ultimo_accidente = $fecha;
+        $fechaModel->save();
+
+        return redirect(route('datos.index'))->with('message', 'Fecha actualizada con exito');
     }
 
     /**
