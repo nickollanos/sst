@@ -15,15 +15,15 @@
     <nav class="bg-blue-600 p-4 flex items-center justify-between text-white">
         <div class="flex space-x-4">
             <!-- Select Año -->
-            <select class="bg-blue-500 text-white p-2 rounded-md" name="ano" id="ano">
+            <select id="ano" class="bg-blue-500 text-white p-2 rounded-md" name="ano"">
                 <option value="">Año</option>
                 @foreach($datos->unique('ano') as $dato)
-                <option value="{{ $dato->ano }}" @if(old('ano')==$dato->ano ) selected @endif>{{ $dato->ano }}</option>
+                <option value=" {{ $dato->ano }}" @if(old('ano')==$dato->ano ) selected @endif>{{ $dato->ano }}</option>
                 @endforeach
             </select>
 
             <!-- Select Mes -->
-            <select class="bg-blue-500 text-white p-2 rounded-md" name="mes" id="mes">
+            <select id="mes" class="bg-blue-500 text-white p-2 rounded-md" name="mes">
                 <option value="">Mes</option>
                 <option value="enero">Enero</option>
                 <option value="febrero">Febrero</option>
@@ -406,7 +406,7 @@
                             <img src="{{ asset('images/cone.svg') }}" alt="cone" class="w-full h-full">
                             <!-- Número en la mitad de la imagen -->
                             <span class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white font-bold text-md">
-                            {{ $dato->condiciones_inseguras }}
+                                {{ $dato->condiciones_inseguras }}
                             </span>
                         </div>
                         <div class="text-center">
@@ -427,27 +427,7 @@
         <p>&copy; 2024 Reporte de Seguridad y Salud en el Trabajo. Todos los derechos reservados.</p>
     </footer>
 
-    @section('js')
-    <script>
-        $(document).ready(function() {
-            $('#ano, #mes').on('change',
-                function() {
-                    var ano = $('#ano').val();
-                    var mes = $('#mes').val();
-
-                    $.ajax({
-                        type: 'GET',
-                        url: '/filtrar-datos',
-                        data: { ano: ano, mes: mes },
-                        success: function(data) {
-                            $('#dasboard').html(data);
-                        }
-                    });
-            });
-        });
-    </script>
-    @endsection
-
+    
 </body>
 
 </html>
