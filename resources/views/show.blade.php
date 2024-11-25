@@ -34,8 +34,8 @@
             <!-- Select Año -->
             <select class="bg-blue-500 text-white p-2 rounded-md" name="ano" id="ano">
                 <option value="">Año</option>
-                @foreach($datos->unique('ano')->sortByDesc('ano') as $dato)
-                <option value="{{ $dato->ano }}" @if(old('ano')==$dato->ano ) selected @endif>{{ $dato->ano }}</option>
+                @foreach($anos as $ano)
+                <option value="{{ $ano }}" @if(old('ano')==$ano ) selected @endif>{{ $ano }}</option>
                 @endforeach
             </select>
             <!-- Select Mes -->
